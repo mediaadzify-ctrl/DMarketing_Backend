@@ -1,0 +1,74 @@
+const express = require("express");
+const { createBlog, getAllBlogs, updateBlog, deleteBlog, getBlogBySlug, getBlogById } = require("../controllers/blog.controller");
+const { authMiddleware, authorize } = require("../middlewares/auth.middleware");
+const { upload } = require("../middlewares/multer.middleware");
+
+const router = express.Router();
+
+// All routes here are already prefixed with /blogs in app.js
+
+/**
+ * @desc    Create a new blog post
+ * @route   POST /blog/add
+ * @access  Private (ADMIN, SUPERADMIN)
+ */
+router.post(
+    "/blog/add",
+    authMiddleware,
+    upload.single("image"),
+    createBlog
+);
+
+/**
+ * @desc    Get all blogs
+ * @route   GET /blogs
+ * @access  Public
+ */
+router.get("/blogs", getAllBlogs);
+
+
+/**
+ * @desc    Delete blog by ID
+ * @route   DELETE /blog/:id
+ * @access  Private
+ */
+router.delete(
+    "/blog/delete/:id",
+    authMiddleware,
+    deleteBlog
+);
+
+/**
+ * @desc    Get single blog by slug
+ * @route   GET /blog/:slug
+ * @access  Public
+ */
+router.get("/blog/:slug", getBlogBySlug);
+
+/**
+ * @desc    Partially update a blog by ID
+ * @route   PATCH blog/update/:id
+ * @access  Private (Admin)
+ */
+router.patch(
+    "/blog/update/:id",
+    authMiddleware,
+    upload.single("image"), // optional
+    updateBlog
+);
+
+
+/**
+ * @desc    Partially update a blog by ID
+ * @route   PATCH blogID/:id
+ * @access  Private (Admin)
+ */
+router.get("/blogID/:id", getBlogById)
+
+
+// You can easily add GET/PUT/DELETE here in the future:
+// .get(getAllBlogs)
+// .put(updateBlog)
+// .delete(deleteBlog)
+
+module.exports = router;
