@@ -11,7 +11,8 @@ const app = express();
 app.use(cors({
   origin: [
     "http://localhost:3000",
-    "https://d-marketing.vercel.app"
+    "https://d-marketing.vercel.app",
+    "https://adzifymedia.com",
   ],
   credentials: true
 }));
