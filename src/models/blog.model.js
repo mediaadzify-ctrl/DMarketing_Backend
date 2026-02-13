@@ -106,7 +106,7 @@ blogSchema.pre("validate", async function () {
 
     // 2. Set default Canonical URL
     if (!this.meta.canonicalUrl && this.slug) {
-        this.meta.canonicalUrl = `http://localhost:3000/blog/${this.slug}`;
+        this.meta.canonicalUrl = `https://adzifymedia.com/blog/${this.slug}`;
     }
 
     // 3. Set default metaTags from tags
