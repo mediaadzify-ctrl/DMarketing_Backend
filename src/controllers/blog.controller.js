@@ -2,7 +2,8 @@ const Blog = require("../models/blog.model");
 const { asyncHandler } = require("../utils/asyncHandler");
 const { ApiError } = require("../utils/ApiError");
 const { ApiResponse } = require("../utils/ApiResponse");
-const { uploadOnCloudinary } = require("../utils/cloudinary");
+const { cloudinary } = require("../utils/cloudinary");
+const { uploadOnCloudinary, deleteFromCloudinary, deleteMultipleFromCloudinary } = require("../utils/cloudinary");
 
 /**
  * @desc    Create a new blog with image upload to Cloudinary
@@ -14,7 +15,8 @@ const createBlog = asyncHandler(async (req, res) => {
         title,
         subtitle,
         content,
-        author
+        author,
+        contentImages
     } = req.body;
 
     // 1. Normalize tags
@@ -73,7 +75,8 @@ const createBlog = asyncHandler(async (req, res) => {
         image: {
             url: uploadResult.url,
             public_id: uploadResult.public_id
-        }
+        },
+        contentImages,
     });
 
     if (!blog) {
@@ -140,6 +143,31 @@ const deleteBlog = asyncHandler(async (req, res) => {
     if (!blog) {
         throw new ApiError(404, "Blog not found");
     }
+
+    /* ---------------------------
+      DELETE COVER IMAGE
+   ---------------------------- */
+
+    if (blog.image?.public_id) {
+
+        await deleteFromCloudinary(blog.image.public_id);
+
+    }
+
+    /* ---------------------------
+       DELETE CONTENT IMAGES
+    ---------------------------- */
+
+    if (blog.contentImages?.length > 0) {
+
+        await deleteMultipleFromCloudinary(
+
+            blog.contentImages
+
+        );
+
+    }
+
 
     await blog.deleteOne();
 

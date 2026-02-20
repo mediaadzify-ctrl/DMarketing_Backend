@@ -25,6 +25,7 @@ const blogSchema = new mongoose.Schema(
                 type: String,
             },
         },
+        contentImages: [String],
         tags: {
             type: [String],
             required: true,
@@ -129,6 +130,20 @@ blogSchema.pre("validate", async function () {
             public_id: this.image.public_id
         };
     }
+});
+
+blogSchema.set("toJSON", {
+    transform: function (doc, ret) {
+
+        // remove unwanted fields
+        delete ret.image?.public_id;
+
+        delete ret.contentImages;
+
+        delete ret.og?.image?.public_id;
+
+        return ret;
+    },
 });
 
 module.exports = mongoose.model("Blog", blogSchema);

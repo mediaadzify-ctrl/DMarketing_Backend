@@ -56,14 +56,106 @@ const uploadOnCloudinary = async (localFilePath, folder = "blogs") => {
  * Delete a file from Cloudinary
  */
 const deleteFromCloudinary = async (publicId) => {
-    if (!publicId) return { success: false, error: "No publicId provided" };
+
+    if (!publicId) {
+
+        console.log("No publicId provided");
+
+        return { success: false };
+
+    }
 
     try {
-        const result = await cloudinary.uploader.destroy(publicId, { resource_type: "auto" });
-        return { success: result.result === "ok", result };
-    } catch (error) {
-        return { success: false, error: "Cloudinary delete failed", details: error.message };
+
+        console.log("Deleting from Cloudinary:", publicId);
+
+        const result = await cloudinary.uploader.destroy(
+
+            publicId,
+
+            {
+
+                resource_type: "image",
+
+                invalidate: true
+
+            }
+
+        );
+
+        console.log("Cloudinary delete result:", result);
+
+        return {
+
+            success: result.result === "ok"
+
+        };
+
     }
+
+    catch (error) {
+
+        console.error("Cloudinary delete error:", error);
+
+        return {
+
+            success: false,
+
+            error: error.message
+
+        };
+
+    }
+
 };
 
-module.exports = { uploadOnCloudinary, deleteFromCloudinary };
+const deleteMultipleFromCloudinary = async (publicIds = []) => {
+
+    if (!Array.isArray(publicIds) || publicIds.length === 0) {
+
+        return {
+            success: false,
+            error: "No publicIds array provided"
+        };
+
+    }
+
+    try {
+
+        const result = await cloudinary.api.delete_resources(
+
+            publicIds,
+
+            {
+                resource_type: "image"
+            }
+
+        );
+
+        return {
+
+            success: true,
+
+            deleted: result.deleted,
+
+            result
+
+        };
+
+    } catch (error) {
+
+        return {
+
+            success: false,
+
+            error: "Cloudinary bulk delete failed",
+
+            details: error.message
+
+        };
+
+    }
+
+};
+
+module.exports = { uploadOnCloudinary, deleteFromCloudinary, deleteMultipleFromCloudinary };

@@ -3,7 +3,7 @@ const cors = require("cors");
 
 const authRoutes = require("./routes/auth.routes");
 const blogRoutes = require("./routes/blog.routes");
-
+const uploadRoutes = require("./routes/upload.routes");
 const { errorHandler } = require("./middlewares/error.middleware");
 
 const app = express();
@@ -22,6 +22,7 @@ app.use(express.json());
 // Routes
 app.use(authRoutes);
 app.use(blogRoutes);
+app.use(uploadRoutes);
 
 // Health check
 app.get("/", (req, res) => {
