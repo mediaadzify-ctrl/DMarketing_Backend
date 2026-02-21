@@ -13,6 +13,7 @@ app.use(cors({
     "http://localhost:3000",
     "https://d-marketing.vercel.app",
     "https://adzifymedia.com",
+    "https://d-marketing-git-test-feature-mediaadzifys-projects.vercel.app"
   ],
   credentials: true
 }));
