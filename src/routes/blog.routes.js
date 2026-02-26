@@ -1,5 +1,5 @@
 const express = require("express");
-const { createBlog, getAllBlogs, updateBlog, deleteBlog, getBlogBySlug, getBlogById } = require("../controllers/blog.controller");
+const { createBlog, getAllBlogs, updateBlog, deleteBlog, getBlogBySlug, getBlogById, publishBlog } = require("../controllers/blog.controller");
 const { authMiddleware, authorize } = require("../middlewares/auth.middleware");
 const { upload } = require("../middlewares/multer.middleware");
 
@@ -66,9 +66,6 @@ router.patch(
 router.get("/blogID/:id", getBlogById)
 
 
-// You can easily add GET/PUT/DELETE here in the future:
-// .get(getAllBlogs)
-// .put(updateBlog)
-// .delete(deleteBlog)
+router.get("/publishByID/:id", authMiddleware, publishBlog)
 
 module.exports = router;

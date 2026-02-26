@@ -16,7 +16,7 @@ const createBlog = asyncHandler(async (req, res) => {
         subtitle,
         content,
         author,
-        contentImages
+        contentImages,
     } = req.body;
 
     // 1. Normalize tags
@@ -77,6 +77,7 @@ const createBlog = asyncHandler(async (req, res) => {
             public_id: uploadResult.public_id
         },
         contentImages,
+         status: req.body.status || "draft",
     });
 
     if (!blog) {
@@ -95,8 +96,7 @@ const createBlog = asyncHandler(async (req, res) => {
  */
 
 const getAllBlogs = asyncHandler(async (req, res) => {
-    const blogs = await Blog.find()
-        .sort({ createdAt: -1 });
+    const blogs = await Blog.find({ status: "published" }).sort({ createdAt: -1 });
     return res.status(200).json(
         new ApiResponse(
             200,
@@ -184,8 +184,10 @@ const deleteBlog = asyncHandler(async (req, res) => {
 const getBlogBySlug = asyncHandler(async (req, res) => {
     const { slug } = req.params;
 
-    const blog = await Blog.findOne({ slug });
-
+    const blog = await Blog.findOne({
+        slug,
+        status: "published"
+    });
     if (!blog) {
         throw new ApiError(404, "Blog not found");
     }
@@ -262,6 +264,24 @@ const updateBlog = asyncHandler(async (req, res) => {
     );
 });
 
+const publishBlog = asyncHandler(async (req, res) => {
+
+    const blog = await Blog.findById(req.params.id);
+
+    if (!blog) {
+        throw new ApiError(404, "Blog not found");
+    }
+
+    blog.status = "published";
+
+    await blog.save();
+
+    return res.json(
+        new ApiResponse(200, blog, "Blog published")
+    );
+
+});
+
 
 
 
@@ -272,4 +292,5 @@ module.exports = {
     deleteBlog,
     getBlogBySlug,
     updateBlog,
+    publishBlog
 };

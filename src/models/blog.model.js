@@ -80,6 +80,12 @@ const blogSchema = new mongoose.Schema(
             type: String,
             trim: true,
         },
+        status: {
+            type: String,
+            enum: ["draft", "published"],
+            default: "draft",
+            index: true
+        }
     },
     {
         timestamps: true,
