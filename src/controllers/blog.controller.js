@@ -90,12 +90,11 @@ const createBlog = asyncHandler(async (req, res) => {
 });
 
 /**
- * @desc    Get all blogs
- * @route   GET /blogs
+ * @desc    Get all published blogs
+ * @route   GET /blogs/published
  * @access  Public
  */
-
-const getAllBlogs = asyncHandler(async (req, res) => {
+const getPublishedBlogs = asyncHandler(async (req, res) => {
     const blogs = await Blog.find({ status: "published" }).sort({ createdAt: -1 });
     return res.status(200).json(
         new ApiResponse(
@@ -104,7 +103,26 @@ const getAllBlogs = asyncHandler(async (req, res) => {
                 count: blogs.length,
                 blogs
             },
-            "Blogs fetched successfully"
+            "Published blogs fetched successfully"
+        )
+    );
+});
+
+/**
+ * @desc    Get all draft blogs
+ * @route   GET /blogs/drafts
+ * @access  Private (Admin)
+ */
+const getDraftBlogs = asyncHandler(async (req, res) => {
+    const blogs = await Blog.find({ status: "draft" }).sort({ createdAt: -1 });
+    return res.status(200).json(
+        new ApiResponse(
+            200,
+            {
+                count: blogs.length,
+                blogs
+            },
+            "Draft blogs fetched successfully"
         )
     );
 });
@@ -287,7 +305,8 @@ const publishBlog = asyncHandler(async (req, res) => {
 
 module.exports = {
     createBlog,
-    getAllBlogs,
+    getPublishedBlogs,
+    getDraftBlogs,
     getBlogById,
     deleteBlog,
     getBlogBySlug,

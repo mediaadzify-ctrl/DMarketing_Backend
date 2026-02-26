@@ -1,5 +1,5 @@
 const express = require("express");
-const { createBlog, getAllBlogs, updateBlog, deleteBlog, getBlogBySlug, getBlogById, publishBlog } = require("../controllers/blog.controller");
+const { createBlog, getPublishedBlogs, getDraftBlogs, updateBlog, deleteBlog, getBlogBySlug, getBlogById, publishBlog } = require("../controllers/blog.controller");
 const { authMiddleware, authorize } = require("../middlewares/auth.middleware");
 const { upload } = require("../middlewares/multer.middleware");
 
@@ -20,11 +20,18 @@ router.post(
 );
 
 /**
- * @desc    Get all blogs
- * @route   GET /blogs
+ * @desc    Get all published blogs
+ * @route   GET /blogs/published
  * @access  Public
  */
-router.get("/blogs", getAllBlogs);
+router.get("/blogs/published", getPublishedBlogs);
+
+/**
+ * @desc    Get all draft blogs
+ * @route   GET /blogs/drafts
+ * @access  Private (Admin)
+ */
+router.get("/blogs/drafts", authMiddleware, getDraftBlogs);
 
 
 /**
