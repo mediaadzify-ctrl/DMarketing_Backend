@@ -77,7 +77,7 @@ const createBlog = asyncHandler(async (req, res) => {
             public_id: uploadResult.public_id
         },
         contentImages,
-         status: req.body.status || "draft",
+        status: req.body.status || "draft",
     });
 
     if (!blog) {
@@ -202,10 +202,7 @@ const deleteBlog = asyncHandler(async (req, res) => {
 const getBlogBySlug = asyncHandler(async (req, res) => {
     const { slug } = req.params;
 
-    const blog = await Blog.findOne({
-        slug,
-        status: "published"
-    });
+    const blog = await Blog.findOne({slug});
     if (!blog) {
         throw new ApiError(404, "Blog not found");
     }
