@@ -1,4 +1,5 @@
 const express = require("express");
+const helmet = require("helmet");
 const cors = require("cors");
 
 const authRoutes = require("./routes/auth.routes");
@@ -13,9 +14,17 @@ app.use(cors({
     "http://localhost:3000",
     "https://d-marketing.vercel.app",
     "https://adzifymedia.com",
-    "https://d-marketing-git-test-feature-mediaadzifys-projects.vercel.app"
   ],
   credentials: true
+}), helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "https:"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https:"],
+      imgSrc: ["'self'", "https:", "data:"],
+    },
+  },
 }));
 
 app.use(express.json());
