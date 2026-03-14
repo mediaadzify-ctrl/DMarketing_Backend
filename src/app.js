@@ -18,6 +18,9 @@ app.use(cors({
   credentials: true
 }), helmet({
    frameguard: { action: "sameorigin" },
+   noSniff: true,
+
+    referrerPolicy: { policy: "strict-origin-when-cross-origin" },
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
