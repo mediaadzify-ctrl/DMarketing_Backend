@@ -17,6 +17,7 @@ app.use(cors({
   ],
   credentials: true
 }), helmet({
+   frameguard: { action: "sameorigin" },
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
